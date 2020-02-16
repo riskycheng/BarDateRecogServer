@@ -291,7 +291,7 @@ public class BarCodeRecog extends JFrame {
 				int result = -1;
 				result = JOptionPane.showConfirmDialog(
                         BarCodeRecog.this,
-                        "请先在客户端选择USB，并且打开扫码界面", "消息提示",
+                        "请先在手机客户端选择USB，并且打开扫码界面", "消息提示",
                         JOptionPane.CLOSED_OPTION
                 );
 				if(result == 0)
@@ -323,6 +323,11 @@ public class BarCodeRecog extends JFrame {
 			case ACTION_TYPE_START_SERVICE_BLUETOOTH:
 				System.out.println("starting blueTooth service...");
 				mBlueToothService.setUpdateUICallback(updateUICallback);
+				JOptionPane.showConfirmDialog(
+                        BarCodeRecog.this,
+                        "首先启动该服务端后再操作手机客户端", "消息提示",
+                        JOptionPane.CLOSED_OPTION
+                );
 				mBlueToothService.start();
 				break;
 				
