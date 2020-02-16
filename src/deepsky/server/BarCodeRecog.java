@@ -33,6 +33,7 @@ import javax.swing.SwingConstants;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.Color;
+import java.awt.Dialog;
 
 public class BarCodeRecog extends JFrame {
 
@@ -269,7 +270,11 @@ public class BarCodeRecog extends JFrame {
 					public void run(){
 					try {
 					Thread.sleep(500);
-					JOptionPane.showMessageDialog(null, "停止并退出", "消息提示", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showConfirmDialog(
+	                        BarCodeRecog.this,
+	                        "停止WiFi服务并退出", "消息提示",
+	                        JOptionPane.CLOSED_OPTION
+	                );
 					System.exit(0);
 					} catch (InterruptedException e) { }
 					}
@@ -283,7 +288,14 @@ public class BarCodeRecog extends JFrame {
 			case ACTION_TYPE_START_SERVICE_USB:
 				System.out.println("starting usb service...");
 				mUSBSocketClient.setUpdateUICallback(updateUICallback);
-				mUSBSocketClient.start();
+				int result = -1;
+				result = JOptionPane.showConfirmDialog(
+                        BarCodeRecog.this,
+                        "请先在客户端选择USB，并且打开扫码界面", "消息提示",
+                        JOptionPane.CLOSED_OPTION
+                );
+				if(result == 0)
+					mUSBSocketClient.start();
 				break;
 				
 			case ACTION_TYPE_STOP_SERVICE_USB:
@@ -293,7 +305,11 @@ public class BarCodeRecog extends JFrame {
 					public void run(){
 					try {
 					Thread.sleep(500);
-					JOptionPane.showMessageDialog(null, "停止并退出", "消息提示", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showConfirmDialog(
+	                        BarCodeRecog.this,
+	                        "停止USB服务并退出", "消息提示",
+	                        JOptionPane.CLOSED_OPTION
+	                );
 					System.exit(0);
 					} catch (InterruptedException e) { }
 					}
@@ -317,7 +333,11 @@ public class BarCodeRecog extends JFrame {
 					public void run(){
 					try {
 					Thread.sleep(500);
-					JOptionPane.showMessageDialog(null, "停止并退出", "消息提示", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showConfirmDialog(
+	                        BarCodeRecog.this,
+	                        "停止蓝牙服务并退出", "消息提示",
+	                        JOptionPane.CLOSED_OPTION
+	                );
 					System.exit(0);
 					} catch (InterruptedException e) { }
 					}

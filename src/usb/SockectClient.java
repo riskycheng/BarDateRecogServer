@@ -48,6 +48,7 @@ public class SockectClient implements Runnable {
 	}
 
 	public void test() {
+		System.out.println("start USB server internal...");
 		try {
 			mSocket = new Socket("127.0.0.1", PORT);
 			System.out.println("socket:" + mSocket.toString());
