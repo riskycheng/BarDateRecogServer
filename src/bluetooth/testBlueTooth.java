@@ -2,7 +2,7 @@ package bluetooth;
 
 import java.io.IOException;
 
-public class Main {
+public class testBlueTooth {
 
     public static void main(String[] args) throws IOException {
         BluetoothService bluetoothService = new BluetoothService();

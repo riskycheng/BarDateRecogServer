@@ -3,6 +3,9 @@ import javax.bluetooth.*;
 import javax.microedition.io.Connector;
 import javax.microedition.io.StreamConnection;
 import javax.microedition.io.StreamConnectionNotifier;
+
+import utils.UpdateUICallback;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -14,13 +17,30 @@ public class BluetoothService implements Runnable {
     private StreamConnectionNotifier streamConnectionNotifier;
     private byte[] buffer = new byte[200];
 
+    Thread mThread;
+    
+    LocalDevice mLocalDevice = null;
+    
+    
+    private UpdateUICallback mUpdateUICallback = null;
+
+   	public void setUpdateUICallback(UpdateUICallback uiCallback) {
+   		this.mUpdateUICallback = uiCallback;
+   	}
+    
+    
     public BluetoothService() {
         isListening = true;
     }
 
     public void init() {
         try {
-            LocalDevice.getLocalDevice().setDiscoverable(DiscoveryAgent.GIAC);
+        	if (mLocalDevice == null) {
+        		mLocalDevice = LocalDevice.getLocalDevice();
+        		mLocalDevice.setDiscoverable(DiscoveryAgent.GIAC);
+        	}
+        		
+        	mThread = new Thread(this);
             streamConnectionNotifier = (StreamConnectionNotifier) Connector.open("btspp://localhost:" + SERVER_UUID.toString());
 
             ServiceRecord serviceRecord = LocalDevice.getLocalDevice().getRecord(streamConnectionNotifier);
@@ -30,8 +50,9 @@ public class BluetoothService implements Runnable {
         }
     }
 
+   
     public void startListening() {
-        new Thread(this).start();
+        mThread.start();
     }
 
     @Override
@@ -52,13 +73,16 @@ public class BluetoothService implements Runnable {
 					Thread.sleep(1000);
 				}
 				System.out.println("message is comming");
-                
-                outputStream.write("hello android BT".getBytes());
-
-                //noinspection ResultOfMethodCallIgnored
+                try{
+                	outputStream.write("hello android BT".getBytes());
+                }catch(Exception e) {
+                	break;
+                }
                 inputStream.read(buffer);
                 String message = new String(buffer);
                 System.out.println("Receive message : " + message);
+                
+                mUpdateUICallback.updateMessageFromBlueToothClient(message);
                 
                 if (message.contains("EXIT_APP")) {
                 	System.out.println("Listener closed");
@@ -76,12 +100,22 @@ public class BluetoothService implements Runnable {
 				inputStream.close();
                 outputStream.close();
 				streamConnection.close();
-				System.out.println("finally");
+				stop();
+				System.out.println("finally release all");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-        
+    }
+    
+    public void start(){
+        init();
+        startListening();
+    }
+    
+    public void stop(){
+    	mThread.interrupt();
+    	mThread = null;
     }
 }

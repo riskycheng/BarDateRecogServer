@@ -11,8 +11,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
-import deepsky.server.SocketServer.UpdateUICallback;
+import bluetooth.BluetoothService;
 import usb.SockectClient;
+import utils.UpdateUICallback;
 
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -36,20 +37,34 @@ import java.awt.Color;
 public class BarCodeRecog extends JFrame {
 
 	public final static String ACTION_TYPE_GENERATE_QRCODE = "generateQRCode";
-	public final static String ACTION_TYPE_GENERATE_START_SERVICE = "startService";
-	public final static String ACTION_TYPE_GENERATE_START_SERVICE_USB = "startServiceUSB";
+	public final static String ACTION_TYPE_START_SERVICE_WIFI = "startServiceWiFi";
+	public final static String ACTION_TYPE_STOP_SERVICE_WIFI = "stopServiceWiFi";
+	public final static String ACTION_TYPE_START_SERVICE_USB = "startServiceUSB";
+	public final static String ACTION_TYPE_STOP_SERVICE_USB = "stopServiceUSB";
+	public final static String ACTION_TYPE_START_SERVICE_BLUETOOTH = "startServiceBlueTooth";
+	public final static String ACTION_TYPE_STOP_SERVICE_BLUETOOTH = "stopServiceBlueTooth";
 
 	private SocketServer mServer = null;
-	
+
 	private SockectClient mUSBSocketClient = null;
 
 	JLabel lblQrcode = new JLabel();
 	JLabel label_IP = new JLabel("");
-	JButton buttonStartService = new JButton("∆Ù∂Ø∑˛ŒÒ");
-	JButton buttonStartUSBService = new JButton("∆Ù∂ØUSB∑˛ŒÒ");
+	JButton buttonStartService = new JButton("ÂêØÂä®WiFiÊúçÂä°");
+	JButton buttonStartUSBService = new JButton("ÂêØÂä®USBÊúçÂä°");
+
+	JButton buttonStopService = new JButton("ÂÅúÊ≠¢WiFiÊúçÂä°");
+	JButton buttonStopUSBService = new JButton("ÂÅúÊ≠¢USBÊúçÂä°");
+
+	BluetoothService mBlueToothService = null;
+	JButton buttonStartBlueToothService = new JButton("ÂêØÂä®ËìùÁâôÊúçÂä°");
+	JButton buttonStopBlueToothService = new JButton("ÂÅúÊ≠¢ËìùÁâôÊúçÂä°");
+
 	JLabel lblLogs = new JLabel("");
 
 	private JPanel contentPane;
+	
+	
 
 	private UpdateUICallback updateUICallback = new UpdateUICallback() {
 
@@ -77,6 +92,19 @@ public class BarCodeRecog extends JFrame {
 				e.printStackTrace();
 			}
 		}
+
+		@Override
+		public void updateMessageFromBlueToothClient(String message) {
+			// TODO Auto-generated method stub
+			System.out.println("message from BlueTooth client >>>> " + message);
+			try {
+				MyRobot.simulationInput(message);
+			} catch (AWTException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
 	};
 
 	/**
@@ -100,11 +128,11 @@ public class BarCodeRecog extends JFrame {
 	 */
 	public BarCodeRecog() {
 		setResizable(false);
-		setTitle("÷«ƒ‹Ãı¬Î»’∆⁄ ∂±”¶”√ v1.0");
+		setTitle("Êô∫ËÉΩÊù°Á†ÅÊó•ÊúüËØÜÂà´Â∫îÁî® v1.0");
 		setIconImage(
 				Toolkit.getDefaultToolkit().getImage(BarCodeRecog.class.getResource("/resources/barcode_logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(0, 0, 400, 400);
+		setBounds(0, 0, 400, 800);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(32, 178, 170));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -127,12 +155,12 @@ public class BarCodeRecog extends JFrame {
 
 		contentPane.add(lblQrcode);
 
-		JLabel lblNewLabel = new JLabel("…®√Ë∂˛Œ¨¬Î¡¨Ω”:");
+		JLabel lblNewLabel = new JLabel("Êâ´Êèè‰∫åÁª¥Á†ÅËøûÊé•:");
 		lblNewLabel.setFont(new Font("SimSun", Font.PLAIN, 16));
 		lblNewLabel.setBounds(184, 50, 125, 15);
 		contentPane.add(lblNewLabel);
 
-		JLabel label = new JLabel("æ÷”ÚÕ¯IPµÿ÷∑£∫");
+		JLabel label = new JLabel("Â±ÄÂüüÁΩëIPÂú∞ÂùÄÔºö");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(184, 290, 100, 15);
 		contentPane.add(label);
@@ -141,33 +169,55 @@ public class BarCodeRecog extends JFrame {
 		label_IP.setBounds(284, 290, 100, 15);
 		contentPane.add(label_IP);
 
-		JLabel label_status = new JLabel("±±æ©Ω¿ Œ¨ø∆ºº”–œﬁπ´Àæ");
+		JLabel label_status = new JLabel("Âåó‰∫¨ÈáëÊúóÁª¥ÁßëÊäÄÊúâÈôêÂÖ¨Âè∏");
 		label_status.setFont(new Font("FZXS12", Font.PLAIN, 12));
 		label_status.setHorizontalAlignment(SwingConstants.CENTER);
-		label_status.setBounds(0, 356, 394, 15);
+		label_status.setBounds(0, 756, 394, 15);
 		contentPane.add(label_status);
 
-		JButton button_refreshQRCode = new JButton("À¢–¬");
+		JButton button_refreshQRCode = new JButton("Âà∑Êñ∞");
 		button_refreshQRCode.setBounds(319, 48, 65, 20);
 		button_refreshQRCode.addActionListener(new MyActionListener());
 		button_refreshQRCode.setActionCommand(ACTION_TYPE_GENERATE_QRCODE);
 		contentPane.add(button_refreshQRCode);
 
-		buttonStartService.setBounds(26, 79, 107, 23);
-		buttonStartService.setActionCommand(ACTION_TYPE_GENERATE_START_SERVICE);
+		buttonStartService.setBounds(26, 79, 140, 30);
+		buttonStartService.setActionCommand(ACTION_TYPE_START_SERVICE_WIFI);
 		buttonStartService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStartService);
-
-		lblLogs.setBounds(4, 310, 378, 43);
-		contentPane.add(lblLogs);
 		
-		buttonStartUSBService.setBounds(26, 112, 107, 23);
-		buttonStartUSBService.setActionCommand(ACTION_TYPE_GENERATE_START_SERVICE_USB);
+		buttonStopService.setBounds(26, 125, 140, 30);
+		buttonStopService.setActionCommand(ACTION_TYPE_STOP_SERVICE_WIFI);
+		buttonStopService.addActionListener(new MyActionListener());
+		contentPane.add(buttonStopService);
+		
+		lblLogs.setBounds(6, 391, 378, 43);
+		contentPane.add(lblLogs);
+
+		buttonStartUSBService.setBounds(26, 178, 140, 30);
+		buttonStartUSBService.setActionCommand(ACTION_TYPE_START_SERVICE_USB);
 		buttonStartUSBService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStartUSBService);
 
-		// add listener
+		buttonStopUSBService.setBounds(26, 228, 140, 30);
+		buttonStopUSBService.setActionCommand(ACTION_TYPE_STOP_SERVICE_USB);
+		buttonStopUSBService.addActionListener(new MyActionListener());
+		contentPane.add(buttonStopUSBService);
+
+		/******** BlueTooth related ***********/
+		mBlueToothService = new BluetoothService();
 		
+		buttonStartBlueToothService.setBounds(26, 286, 140, 30);
+		buttonStartBlueToothService.setActionCommand(ACTION_TYPE_START_SERVICE_BLUETOOTH);
+		buttonStartBlueToothService.addActionListener(new MyActionListener());
+		contentPane.add(buttonStartBlueToothService);
+
+		buttonStopBlueToothService.setBounds(26, 339, 140, 30);
+		buttonStopBlueToothService.setActionCommand(ACTION_TYPE_STOP_SERVICE_BLUETOOTH);
+		buttonStopBlueToothService.addActionListener(new MyActionListener());
+		contentPane.add(buttonStopBlueToothService);
+
+		// add listener
 
 	}
 
@@ -198,7 +248,8 @@ public class BarCodeRecog extends JFrame {
 
 				break;
 
-			case ACTION_TYPE_GENERATE_START_SERVICE:
+			case ACTION_TYPE_START_SERVICE_WIFI:
+				System.out.println("starting Wifi service...");
 				try {
 					mServer = new SocketServer();
 					mServer.start();
@@ -208,15 +259,69 @@ public class BarCodeRecog extends JFrame {
 					e1.printStackTrace();
 				}
 				break;
-				case ACTION_TYPE_GENERATE_START_SERVICE_USB:
-					System.out.println("USB server starting...");
-					mUSBSocketClient = new SockectClient();
-					mUSBSocketClient.setUpdateUICallback(updateUICallback);
-			        if (mUSBSocketClient.adbCmd()) {
-			        	mUSBSocketClient.test();
-			        }
-					
-					break;
+				
+				
+			case ACTION_TYPE_STOP_SERVICE_WIFI:
+				System.out.println("stopping Wifi service...");
+				new Thread(){
+					public void run(){
+					try {
+					Thread.sleep(500);
+					JOptionPane.showMessageDialog(null, "ÂÅúÊ≠¢Âπ∂ÈÄÄÂá∫", "Ê∂àÊÅØÊèêÁ§∫", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+					} catch (InterruptedException e) { }
+					}
+					}.start();
+				break;
+				
+				
+				
+				
+				
+			case ACTION_TYPE_START_SERVICE_USB:
+				System.out.println("starting usb service...");
+				mUSBSocketClient = new SockectClient();
+				mUSBSocketClient.setUpdateUICallback(updateUICallback);
+				if (mUSBSocketClient.adbCmd()) {
+					mUSBSocketClient.test();
+				}
+				break;
+				
+			case ACTION_TYPE_STOP_SERVICE_USB:
+				System.out.println("stopping usb service...");
+				new Thread(){
+					public void run(){
+					try {
+					Thread.sleep(500);
+					JOptionPane.showMessageDialog(null, "ÂÅúÊ≠¢Âπ∂ÈÄÄÂá∫", "Ê∂àÊÅØÊèêÁ§∫", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+					} catch (InterruptedException e) { }
+					}
+					}.start();
+				break;
+
+				
+				
+				
+				
+			case ACTION_TYPE_START_SERVICE_BLUETOOTH:
+				System.out.println("starting blueTooth service...");
+				mBlueToothService.setUpdateUICallback(updateUICallback);
+				mBlueToothService.start();
+				break;
+				
+			case ACTION_TYPE_STOP_SERVICE_BLUETOOTH:
+				System.out.println("stopping blueTooth service...");
+				mBlueToothService.stop();
+				new Thread(){
+					public void run(){
+					try {
+					Thread.sleep(500);
+					JOptionPane.showMessageDialog(null, "ÂÅúÊ≠¢Âπ∂ÈÄÄÂá∫", "Ê∂àÊÅØÊèêÁ§∫", JOptionPane.ERROR_MESSAGE);
+					System.exit(0);
+					} catch (InterruptedException e) { }
+					}
+					}.start();
 			default:
 				break;
 			}

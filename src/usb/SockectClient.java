@@ -4,12 +4,17 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-import deepsky.server.SocketServer.UpdateUICallback;
-
+import utils.UpdateUICallback;
 public class SockectClient {
     private Socket mSocket = null;
     private static final int PORT = 54321;
 
+    Thread mThread = null;
+    
+    
+    public SockectClient() {
+    	mThread = new Thread();
+    }
     
     private UpdateUICallback mUpdateUICallback = null;
 
@@ -76,6 +81,14 @@ public class SockectClient {
         }
     }
 
+    
+    
+    
+    public void start(){
+    	
+    }
+    
+    
     public static void main(String[] args) {
         SockectClient client = new SockectClient();
         if (client.adbCmd()) {

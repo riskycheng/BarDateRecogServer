@@ -8,13 +8,11 @@ import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import utils.UpdateUICallback;
+
 public class SocketServer extends Thread {
 
-	public interface UpdateUICallback {
-		void updateMsgFromClient(String clientIP, String message);
-		
-		void updateMesFromUSBClient(String message);
-	}
+	
 
 	private UpdateUICallback mUpdateUICallback = null;
 
@@ -30,7 +28,7 @@ public class SocketServer extends Thread {
 				client = responseSocket();
 				while (true) {
 					msg = receiveMsg(client);
-					System.out.println("ÊÕµ½¿Í»§¶ËÏûÏ¢£º" + msg);
+					System.out.println("æ”¶åˆ°å®¢æˆ·ç«¯æ¶ˆæ¯ï¼š" + msg);
 					mUpdateUICallback.updateMsgFromClient(client.getInetAddress().getHostAddress(), msg);
 					sendMsg(client, msg);
 					if (true) {
@@ -53,12 +51,12 @@ public class SocketServer extends Thread {
 
 	public void createSocket() throws IOException {
 		ss = new ServerSocket(PORT);
-		System.out.println("·şÎñÆ÷ÒÑ¾­¿ªÆô¡¤¡¤¡¤¡¤¡¤¡¤");
+		System.out.println("æœåŠ¡å™¨å·²ç»å¼€å¯Â·Â·Â·Â·Â·Â·");
 	}
 
 	public Socket responseSocket() throws IOException {
 		Socket client = ss.accept();
-		System.out.println("¿Í»§¶ËÒÑ¾­Á¬½Ó¡¤¡¤¡¤¡¤¡¤¡¤");
+		System.out.println("å®¢æˆ·ç«¯å·²ç»è¿æ¥Â·Â·Â·Â·Â·Â·");
 		return client;
 	}
 
@@ -66,7 +64,7 @@ public class SocketServer extends Thread {
 		br.close();
 		bw.close();
 		s.close();
-		System.out.println("¿Í»§¶ËÒÑ¾­¹Ø±Õ¡¤¡¤¡¤¡¤¡¤¡¤");
+		System.out.println("å®¢æˆ·ç«¯å·²ç»å…³é—­Â·Â·Â·Â·Â·Â·");
 	}
 
 	public void sendMsg(Socket s, String msg) throws IOException {
@@ -78,7 +76,7 @@ public class SocketServer extends Thread {
 	public String receiveMsg(Socket s) throws IOException {
 		br = new BufferedReader(new InputStreamReader(s.getInputStream()));
 		String msg = br.readLine();
-		System.out.println("·şÎñÆ÷ÊÕµ½¿Í»§¶ËÏûÏ¢£º" + msg);
+		System.out.println("æœåŠ¡å™¨æ”¶åˆ°å®¢æˆ·ç«¯æ¶ˆæ¯ï¼š" + msg);
 		return msg;
 	}
 
