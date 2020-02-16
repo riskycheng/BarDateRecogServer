@@ -29,41 +29,41 @@ public class ThreadPoolManager {
 
     private static final String THREAD_NAME_SCHEDULE = "threadPool-schedule";
     /**
-     * æ™®é€šçº¿ç¨‹æ± 
+     * ÆÕÍ¨Ïß³Ì³Ø
      */
     private ThreadPoolExecutor mPoolExecutor;
 
     /**
-     * Scheduledçº¿ç¨‹æ± 
+     * ScheduledÏß³Ì³Ø
      */
     private ScheduledThreadPoolExecutor mScheduledPoolExecutor;
 
     /**
-     * å¯ä»¥æ§åˆ¶ä»»åŠ¡ç”Ÿå‘½å‘¨æœŸçš„ä»»åŠ¡é˜Ÿåˆ—
+     * ¿ÉÒÔ¿ØÖÆÈÎÎñÉúÃüÖÜÆÚµÄÈÎÎñ¶ÓÁĞ
      */
     private Map<String, List<WeakReference<Future<?>>>> mTaskMap;
 
     /**
-     * å•ä¾‹
+     * µ¥Àı
      */
     private static ThreadPoolManager instance = null;
 
     /**
-     * æ™®é€šçº¿ç¨‹æ± æ ¸å¿ƒçº¿ç¨‹æ± çš„æ•°é‡ï¼ŒåŒæ—¶èƒ½å¤Ÿæ‰§è¡Œçš„çº¿ç¨‹æ•°é‡
+     * ÆÕÍ¨Ïß³Ì³ØºËĞÄÏß³Ì³ØµÄÊıÁ¿£¬Í¬Ê±ÄÜ¹»Ö´ĞĞµÄÏß³ÌÊıÁ¿
      */
     private int mCommonCorePoolSize = Runtime.getRuntime().availableProcessors() * 2 + 1;
 
     /**
-     * æ ¸å¿ƒçº¿ç¨‹æ± çš„æ•°é‡ï¼ŒåŒæ—¶èƒ½å¤Ÿæ‰§è¡Œçš„çº¿ç¨‹æ•°é‡
+     * ºËĞÄÏß³Ì³ØµÄÊıÁ¿£¬Í¬Ê±ÄÜ¹»Ö´ĞĞµÄÏß³ÌÊıÁ¿
      */
     private int mScheduleCorePoolSize = 10;
     /**
-     * æœ€å¤§çº¿ç¨‹æ± æ•°é‡
+     * ×î´óÏß³Ì³ØÊıÁ¿
      */
     private int mMaximumPoolSize = mCommonCorePoolSize + 10;
 
     /**
-     * å­˜æ´»æ—¶é—´,æ ¹æ®å„ç§çº¿ç¨‹ä»»åŠ¡æ‰§è¡Œè¶…æ—¶æ—¶é—´è¯„ä¼° ï¼ˆç½‘ç»œé‡è¿ä»»åŠ¡ è¶…æ—¶ï¼‰
+     * ´æ»îÊ±¼ä,¸ù¾İ¸÷ÖÖÏß³ÌÈÎÎñÖ´ĞĞ³¬Ê±Ê±¼äÆÀ¹À £¨ÍøÂçÖØÁ¬ÈÎÎñ ³¬Ê±£©
      */
     private long mKeepAliveTime = 30;
     /**
@@ -74,7 +74,7 @@ public class ThreadPoolManager {
     private final int MAX_QUEUE_LENGTH = 200;
 
     /**
-     * åˆ›å»ºä¸€ä¸ªæ–°çš„å®ä¾‹ ThreadPoolManager
+     * ´´½¨Ò»¸öĞÂµÄÊµÀı ThreadPoolManager
      */
     private ThreadPoolManager() {
         mPoolExecutor = new ThreadPoolExecutor(
@@ -82,9 +82,9 @@ public class ThreadPoolManager {
                 mMaximumPoolSize,
                 mKeepAliveTime,
                 unit,
-                //ç¼“å†²é˜Ÿåˆ—ï¼Œç”¨äºå­˜æ”¾ç­‰å¾…ä»»åŠ¡ï¼ŒLinkedçš„å…ˆè¿›å…ˆå‡º
+                //»º³å¶ÓÁĞ£¬ÓÃÓÚ´æ·ÅµÈ´ıÈÎÎñ£¬LinkedµÄÏÈ½øÏÈ³ö
                 new LinkedBlockingQueue<Runnable>(MAX_QUEUE_LENGTH),
-                //åˆ›å»ºçº¿ç¨‹çš„å·¥å‚
+                //´´½¨Ïß³ÌµÄ¹¤³§
                 new ThreadFactory() {
                     private final AtomicInteger mCount = new AtomicInteger(1);
 
@@ -94,7 +94,7 @@ public class ThreadPoolManager {
                     }
                 }
         );
-        // ç”¨æ¥å¯¹è¶…å‡ºmaximumPoolSizeçš„ä»»åŠ¡çš„å¤„ç†ç­–ç•¥
+        // ÓÃÀ´¶Ô³¬³ömaximumPoolSizeµÄÈÎÎñµÄ´¦Àí²ßÂÔ
         mPoolExecutor.setRejectedExecutionHandler(new ThreadPoolExecutor.AbortPolicy() {
             @Override
             public void rejectedExecution(Runnable r, ThreadPoolExecutor e) {
@@ -131,7 +131,7 @@ public class ThreadPoolManager {
     }
 
     /**
-     * è·å–ThreadPoolManagerå•ä¾‹å¯¹è±¡
+     * »ñÈ¡ThreadPoolManagerµ¥Àı¶ÔÏó
      */
     public static ThreadPoolManager getInstance() {
         if (instance == null) {
@@ -145,8 +145,8 @@ public class ThreadPoolManager {
     }
 
     /**
-     * é‡Šæ”¾MinaThreadPoolManagerä¸­çº¿ç¨‹èµ„æº
-     * ä¸»è¦ç”¨äºé€€å‡ºåº”ç”¨è¿›ç¨‹å‰ï¼Œé”€æ¯çº¿ç¨‹æ± 
+     * ÊÍ·ÅMinaThreadPoolManagerÖĞÏß³Ì×ÊÔ´
+     * Ö÷ÒªÓÃÓÚÍË³öÓ¦ÓÃ½ø³ÌÇ°£¬Ïú»ÙÏß³Ì³Ø
      */
     public void release() {
         synchronized (ThreadPoolManager.class) {
@@ -160,10 +160,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * é‡å¯çº¿ç¨‹
-     * å¦‚æœçº¿ç¨‹ä»»åŠ¡ä¸åœ¨çº¿ç¨‹æ± åˆ™ç­‰æ•ˆäºstartTaskThread
+     * ÖØÆôÏß³Ì
+     * Èç¹ûÏß³ÌÈÎÎñ²»ÔÚÏß³Ì³ØÔòµÈĞ§ÓÚstartTaskThread
      *
-     * @param task é‡å¯ä»»åŠ¡çº¿ç¨‹
+     * @param task ÖØÆôÈÎÎñÏß³Ì
      */
     public void restartTaskThread(Thread task) {
         if (task != null) {
@@ -173,10 +173,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * é‡å¯çº¿ç¨‹
+     * ÖØÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡
-     * @param name ä»»åŠ¡åç§°
+     * @param task ÈÎÎñ
+     * @param name ÈÎÎñÃû³Æ
      */
     public void restartTaskThread(FutureTask task, String name) {
         if (task != null && name != null) {
@@ -186,10 +186,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * é‡å¯çº¿ç¨‹
+     * ÖØÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡
-     * @param name ä»»åŠ¡åç§°
+     * @param task ÈÎÎñ
+     * @param name ÈÎÎñÃû³Æ
      */
     public void restartTaskThread(Runnable task, String name) {
         if (task != null && name != null) {
@@ -199,9 +199,9 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å¼€å¯çº¿ç¨‹
+     * ¿ªÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡çº¿ç¨‹
+     * @param task ÈÎÎñÏß³Ì
      */
     public void startTaskThread(Thread task) {
         Future<?> request = mPoolExecutor.submit(task);
@@ -212,10 +212,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å¼€å¯çº¿ç¨‹
+     * ¿ªÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡çº¿ç¨‹
-     * @param name ä»»åŠ¡åå­—
+     * @param task ÈÎÎñÏß³Ì
+     * @param name ÈÎÎñÃû×Ö
      */
     public void startTaskThread(FutureTask task, String name) {
         if (task != null && name != null) {
@@ -227,10 +227,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å¼€å¯çº¿ç¨‹
+     * ¿ªÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡çº¿ç¨‹
-     * @param name ä»»åŠ¡åå­—
+     * @param task ÈÎÎñÏß³Ì
+     * @param name ÈÎÎñÃû×Ö
      */
     public void startTaskThread(Runnable task, String name) {
         if (task != null && name != null) {
@@ -242,9 +242,9 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å¼€å¯çº¿ç¨‹
+     * ¿ªÆôÏß³Ì
      *
-     * @param task ä»»åŠ¡çº¿ç¨‹
+     * @param task ÈÎÎñÏß³Ì
      */
     public void executeTaskThread(Thread task) {
         String taskName = task.getName();
@@ -254,25 +254,25 @@ public class ThreadPoolManager {
     }
 
     /**
-     * ç»“æŸçº¿ç¨‹
+     * ½áÊøÏß³Ì
      *
-     * @param task ä»»åŠ¡çº¿ç¨‹
+     * @param task ÈÎÎñÏß³Ì
      */
     public void stopTaskThread(Thread task) {
         stopTaskThread(task.getName());
     }
 
     /**
-     * ç»“æŸçº¿ç¨‹
+     * ½áÊøÏß³Ì
      *
-     * @param taskTag ä»»åŠ¡çº¿ç¨‹
+     * @param taskTag ÈÎÎñÏß³Ì
      */
     public void stopTaskThread(String taskTag) {
         cancelTaskThreads(taskTag);
     }
 
     /**
-     * æ·»åŠ æ‰§è¡Œä»»åŠ¡åˆ°é˜Ÿåˆ—ä¸­
+     * Ìí¼ÓÖ´ĞĞÈÎÎñµ½¶ÓÁĞÖĞ
      *
      * @param request
      */
@@ -290,7 +290,7 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å–æ¶ˆæ‰€æœ‰çš„ä»»åŠ¡
+     * È¡ÏûËùÓĞµÄÈÎÎñ
      */
     public void cancelAllTaskThreads() {
         for (String clsName : mTaskMap.keySet()) {
@@ -309,7 +309,7 @@ public class ThreadPoolManager {
     }
 
     /**
-     * æ ¹æ®ç‰¹å®šä»»åŠ¡åç§°å–æ¶ˆä»»åŠ¡
+     * ¸ù¾İÌØ¶¨ÈÎÎñÃû³ÆÈ¡ÏûÈÎÎñ
      */
     private void cancelTaskThreads(String taskName) {
         System.out.println("cancelTaskThreads task name = " + taskName);
@@ -334,26 +334,26 @@ public class ThreadPoolManager {
     private void printPoolExecutorInfo() {
         if (mPoolExecutor != null) {
             System.out.println("mPoolExecutor info:[poolSize:" + mPoolExecutor.getPoolSize()
-                    + "ï¼ŒactiveCount:" + mPoolExecutor.getActiveCount()
-                    + "ï¼ŒtaskQueueCount:" + mPoolExecutor.getQueue().size()
-                    + "ï¼ŒcompleteTaskCountï¼š" + mPoolExecutor.getCompletedTaskCount() + "]");
+                    + "£¬activeCount:" + mPoolExecutor.getActiveCount()
+                    + "£¬taskQueueCount:" + mPoolExecutor.getQueue().size()
+                    + "£¬completeTaskCount£º" + mPoolExecutor.getCompletedTaskCount() + "]");
         }
         if (mScheduledPoolExecutor != null) {
             System.out.println(
                     "mScheduledPoolExecutor info:[poolSize:" + mScheduledPoolExecutor.getPoolSize()
-                            + "ï¼ŒactiveCount:" + mScheduledPoolExecutor.getActiveCount()
-                            + "ï¼ŒtaskQueueCount:" + mScheduledPoolExecutor.getQueue().size()
-                            + "ï¼ŒcompleteTaskCountï¼š" +
+                            + "£¬activeCount:" + mScheduledPoolExecutor.getActiveCount()
+                            + "£¬taskQueueCount:" + mScheduledPoolExecutor.getQueue().size()
+                            + "£¬completeTaskCount£º" +
                             mScheduledPoolExecutor.getCompletedTaskCount() + "]");
         }
     }
 
     /**
-     * æ‰§è¡Œåœ¨ç»™å®šå»¶è¿Ÿåå¯ç”¨çš„ä¸€æ¬¡æ€§æ“ä½œ
+     * Ö´ĞĞÔÚ¸ø¶¨ÑÓ³ÙºóÆôÓÃµÄÒ»´ÎĞÔ²Ù×÷
      *
-     * @param task  è¦æ‰§è¡Œçš„ä»»åŠ¡
-     * @param delay ä»ç°åœ¨å¼€å§‹å»¶è¿Ÿæ‰§è¡Œçš„æ—¶é—´
-     * @param unit  å»¶è¿Ÿå‚æ•°çš„æ—¶é—´å•ä½
+     * @param task  ÒªÖ´ĞĞµÄÈÎÎñ
+     * @param delay ´ÓÏÖÔÚ¿ªÊ¼ÑÓ³ÙÖ´ĞĞµÄÊ±¼ä
+     * @param unit  ÑÓ³Ù²ÎÊıµÄÊ±¼äµ¥Î»
      */
     public void scheduleTaskThread(Thread task, long delay, TimeUnit unit) {
         Future<?> request = mScheduledPoolExecutor.schedule(task, delay, unit);
@@ -361,12 +361,12 @@ public class ThreadPoolManager {
     }
 
     /**
-     * æ‰§è¡Œåœ¨ç»™å®šå»¶è¿Ÿåå¯ç”¨çš„ä¸€æ¬¡æ€§æ“ä½œ
+     * Ö´ĞĞÔÚ¸ø¶¨ÑÓ³ÙºóÆôÓÃµÄÒ»´ÎĞÔ²Ù×÷
      *
-     * @param task     è¦æ‰§è¡Œçš„ä»»åŠ¡
-     * @param taskName ä»»åŠ¡åç§°
-     * @param delay    ä»ç°åœ¨å¼€å§‹å»¶è¿Ÿæ‰§è¡Œçš„æ—¶é—´
-     * @param unit     å»¶è¿Ÿå‚æ•°çš„æ—¶é—´å•ä½
+     * @param task     ÒªÖ´ĞĞµÄÈÎÎñ
+     * @param taskName ÈÎÎñÃû³Æ
+     * @param delay    ´ÓÏÖÔÚ¿ªÊ¼ÑÓ³ÙÖ´ĞĞµÄÊ±¼ä
+     * @param unit     ÑÓ³Ù²ÎÊıµÄÊ±¼äµ¥Î»
      */
     public void scheduleTaskThread(Runnable task, String taskName, long delay,
             TimeUnit unit) {
@@ -377,12 +377,12 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å‘¨æœŸæ€§æ‰§è¡Œä»»åŠ¡
+     * ÖÜÆÚĞÔÖ´ĞĞÈÎÎñ
      *
-     * @param task         è¦æ‰§è¡Œçš„ä»»åŠ¡
-     * @param initialDelay ä»ç°åœ¨å¼€å§‹å»¶è¿Ÿæ‰§è¡Œçš„æ—¶é—´
-     * @param period       æ‰§è¡Œé—´éš”
-     * @param unit         å»¶è¿Ÿå‚æ•°çš„æ—¶é—´å•ä½
+     * @param task         ÒªÖ´ĞĞµÄÈÎÎñ
+     * @param initialDelay ´ÓÏÖÔÚ¿ªÊ¼ÑÓ³ÙÖ´ĞĞµÄÊ±¼ä
+     * @param period       Ö´ĞĞ¼ä¸ô
+     * @param unit         ÑÓ³Ù²ÎÊıµÄÊ±¼äµ¥Î»
      */
     public void scheduleAtFixedRate(Thread task, long initialDelay, long period, TimeUnit unit) {
         Future<?> request =
@@ -391,13 +391,13 @@ public class ThreadPoolManager {
     }
 
     /**
-     * å‘¨æœŸæ€§æ‰§è¡Œä»»åŠ¡
+     * ÖÜÆÚĞÔÖ´ĞĞÈÎÎñ
      *
-     * @param task         è¦æ‰§è¡Œçš„ä»»åŠ¡
-     * @param taskName     ä»»åŠ¡åç§°
-     * @param initialDelay ä»ç°åœ¨å¼€å§‹å»¶è¿Ÿæ‰§è¡Œçš„æ—¶é—´
-     * @param period       æ‰§è¡Œé—´éš”
-     * @param unit         å»¶è¿Ÿå‚æ•°çš„æ—¶é—´å•ä½
+     * @param task         ÒªÖ´ĞĞµÄÈÎÎñ
+     * @param taskName     ÈÎÎñÃû³Æ
+     * @param initialDelay ´ÓÏÖÔÚ¿ªÊ¼ÑÓ³ÙÖ´ĞĞµÄÊ±¼ä
+     * @param period       Ö´ĞĞ¼ä¸ô
+     * @param unit         ÑÓ³Ù²ÎÊıµÄÊ±¼äµ¥Î»
      */
     public void scheduleAtFixedRate(Runnable task, String taskName, long initialDelay,
             long period,
@@ -410,10 +410,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * ä»»åŠ¡é˜Ÿåˆ—ä¸­æ˜¯å¦æœ‰
+     * ÈÎÎñ¶ÓÁĞÖĞÊÇ·ñÓĞ
      *
-     * @param task ä»»åŠ¡
-     * @return æ˜¯å¦æœ‰æ ‡ç­¾ä»»åŠ¡ true-æœ‰
+     * @param task ÈÎÎñ
+     * @return ÊÇ·ñÓĞ±êÇ©ÈÎÎñ true-ÓĞ
      */
     public boolean hasTask(Thread task) {
         if (task == null) {
@@ -423,10 +423,10 @@ public class ThreadPoolManager {
     }
 
     /**
-     * ä»»åŠ¡é˜Ÿåˆ—ä¸­æ˜¯å¦æœ‰
+     * ÈÎÎñ¶ÓÁĞÖĞÊÇ·ñÓĞ
      *
-     * @param taskTag ä»»åŠ¡æ ‡ç­¾
-     * @return æ˜¯å¦æœ‰æ ‡ç­¾ä»»åŠ¡ true-æœ‰
+     * @param taskTag ÈÎÎñ±êÇ©
+     * @return ÊÇ·ñÓĞ±êÇ©ÈÎÎñ true-ÓĞ
      */
     public boolean hasTask(String taskTag) {
         if (taskTag == null) {

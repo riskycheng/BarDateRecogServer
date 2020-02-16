@@ -51,15 +51,15 @@ public class BarCodeRecog extends JFrame {
 
 	JLabel lblQrcode = new JLabel();
 	JLabel label_IP = new JLabel("");
-	JButton buttonStartService = new JButton("å¯åŠ¨WiFiæœåŠ¡");
-	JButton buttonStartUSBService = new JButton("å¯åŠ¨USBæœåŠ¡");
+	JButton buttonStartService = new JButton("Æô¶¯WiFi·şÎñ");
+	JButton buttonStartUSBService = new JButton("Æô¶¯USB·şÎñ");
 
-	JButton buttonStopService = new JButton("åœæ­¢WiFiæœåŠ¡");
-	JButton buttonStopUSBService = new JButton("åœæ­¢USBæœåŠ¡");
+	JButton buttonStopService = new JButton("Í£Ö¹WiFi·şÎñ");
+	JButton buttonStopUSBService = new JButton("Í£Ö¹USB·şÎñ");
 
 	BluetoothService mBlueToothService = null;
-	JButton buttonStartBlueToothService = new JButton("å¯åŠ¨è“ç‰™æœåŠ¡");
-	JButton buttonStopBlueToothService = new JButton("åœæ­¢è“ç‰™æœåŠ¡");
+	JButton buttonStartBlueToothService = new JButton("Æô¶¯À¶ÑÀ·şÎñ");
+	JButton buttonStopBlueToothService = new JButton("Í£Ö¹À¶ÑÀ·şÎñ");
 
 	JLabel lblLogs = new JLabel("");
 
@@ -129,7 +129,7 @@ public class BarCodeRecog extends JFrame {
 	 */
 	public BarCodeRecog() {
 		setResizable(false);
-		setTitle("æ™ºèƒ½æ¡ç æ—¥æœŸè¯†åˆ«åº”ç”¨ v1.0");
+		setTitle("ÖÇÄÜÌõÂëÈÕÆÚÊ¶±ğÓ¦ÓÃ v1.0");
 		setIconImage(
 				Toolkit.getDefaultToolkit().getImage(BarCodeRecog.class.getResource("/resources/barcode_logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -156,12 +156,12 @@ public class BarCodeRecog extends JFrame {
 
 		contentPane.add(lblQrcode);
 
-		JLabel lblNewLabel = new JLabel("æ‰«æäºŒç»´ç è¿æ¥:");
+		JLabel lblNewLabel = new JLabel("É¨Ãè¶şÎ¬ÂëÁ¬½Ó:");
 		lblNewLabel.setFont(new Font("SimSun", Font.PLAIN, 16));
 		lblNewLabel.setBounds(184, 50, 125, 15);
 		contentPane.add(lblNewLabel);
 
-		JLabel label = new JLabel("å±€åŸŸç½‘IPåœ°å€ï¼š");
+		JLabel label = new JLabel("¾ÖÓòÍøIPµØÖ·£º");
 		label.setHorizontalAlignment(SwingConstants.CENTER);
 		label.setBounds(184, 290, 100, 15);
 		contentPane.add(label);
@@ -170,13 +170,13 @@ public class BarCodeRecog extends JFrame {
 		label_IP.setBounds(284, 290, 100, 15);
 		contentPane.add(label_IP);
 
-		JLabel label_status = new JLabel("åŒ—äº¬é‡‘æœ—ç»´ç§‘æŠ€æœ‰é™å…¬å¸");
+		JLabel label_status = new JLabel("±±¾©½ğÀÊÎ¬¿Æ¼¼ÓĞÏŞ¹«Ë¾");
 		label_status.setFont(new Font("FZXS12", Font.PLAIN, 12));
 		label_status.setHorizontalAlignment(SwingConstants.CENTER);
 		label_status.setBounds(0, 756, 394, 15);
 		contentPane.add(label_status);
 
-		JButton button_refreshQRCode = new JButton("åˆ·æ–°");
+		JButton button_refreshQRCode = new JButton("Ë¢ĞÂ");
 		button_refreshQRCode.setBounds(319, 48, 65, 20);
 		button_refreshQRCode.addActionListener(new MyActionListener());
 		button_refreshQRCode.setActionCommand(ACTION_TYPE_GENERATE_QRCODE);
@@ -272,7 +272,7 @@ public class BarCodeRecog extends JFrame {
 					Thread.sleep(500);
 					JOptionPane.showConfirmDialog(
 	                        BarCodeRecog.this,
-	                        "åœæ­¢WiFiæœåŠ¡å¹¶é€€å‡º", "æ¶ˆæ¯æç¤º",
+	                        "Í£Ö¹WiFi·şÎñ²¢ÍË³ö", "ÏûÏ¢ÌáÊ¾",
 	                        JOptionPane.CLOSED_OPTION
 	                );
 					System.exit(0);
@@ -291,7 +291,7 @@ public class BarCodeRecog extends JFrame {
 				int result = -1;
 				result = JOptionPane.showConfirmDialog(
                         BarCodeRecog.this,
-                        "è¯·å…ˆåœ¨æ‰‹æœºå®¢æˆ·ç«¯é€‰æ‹©USBï¼Œå¹¶ä¸”æ‰“å¼€æ‰«ç ç•Œé¢", "æ¶ˆæ¯æç¤º",
+                        "ÇëÏÈÔÚÊÖ»ú¿Í»§¶ËÑ¡ÔñUSB£¬²¢ÇÒ´ò¿ªÉ¨Âë½çÃæ", "ÏûÏ¢ÌáÊ¾",
                         JOptionPane.CLOSED_OPTION
                 );
 				if(result == 0)
@@ -307,7 +307,7 @@ public class BarCodeRecog extends JFrame {
 					Thread.sleep(500);
 					JOptionPane.showConfirmDialog(
 	                        BarCodeRecog.this,
-	                        "åœæ­¢USBæœåŠ¡å¹¶é€€å‡º", "æ¶ˆæ¯æç¤º",
+	                        "Í£Ö¹USB·şÎñ²¢ÍË³ö", "ÏûÏ¢ÌáÊ¾",
 	                        JOptionPane.CLOSED_OPTION
 	                );
 					System.exit(0);
@@ -325,7 +325,7 @@ public class BarCodeRecog extends JFrame {
 				mBlueToothService.setUpdateUICallback(updateUICallback);
 				JOptionPane.showConfirmDialog(
                         BarCodeRecog.this,
-                        "é¦–å…ˆå¯åŠ¨è¯¥æœåŠ¡ç«¯åå†æ“ä½œæ‰‹æœºå®¢æˆ·ç«¯", "æ¶ˆæ¯æç¤º",
+                        "Ê×ÏÈÆô¶¯¸Ã·şÎñ¶ËºóÔÙ²Ù×÷ÊÖ»ú¿Í»§¶Ë", "ÏûÏ¢ÌáÊ¾",
                         JOptionPane.CLOSED_OPTION
                 );
 				mBlueToothService.start();
@@ -340,7 +340,7 @@ public class BarCodeRecog extends JFrame {
 					Thread.sleep(500);
 					JOptionPane.showConfirmDialog(
 	                        BarCodeRecog.this,
-	                        "åœæ­¢è“ç‰™æœåŠ¡å¹¶é€€å‡º", "æ¶ˆæ¯æç¤º",
+	                        "Í£Ö¹À¶ÑÀ·şÎñ²¢ÍË³ö", "ÏûÏ¢ÌáÊ¾",
 	                        JOptionPane.CLOSED_OPTION
 	                );
 					System.exit(0);
