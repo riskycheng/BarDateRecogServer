@@ -194,6 +194,8 @@ public class BarCodeRecog extends JFrame {
 		lblLogs.setBounds(6, 391, 378, 43);
 		contentPane.add(lblLogs);
 
+		// USB related
+		mUSBSocketClient = new SockectClient();
 		buttonStartUSBService.setBounds(26, 178, 140, 30);
 		buttonStartUSBService.setActionCommand(ACTION_TYPE_START_SERVICE_USB);
 		buttonStartUSBService.addActionListener(new MyActionListener());
@@ -217,7 +219,7 @@ public class BarCodeRecog extends JFrame {
 		buttonStopBlueToothService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopBlueToothService);
 
-		// add listener
+		
 
 	}
 
@@ -280,15 +282,13 @@ public class BarCodeRecog extends JFrame {
 				
 			case ACTION_TYPE_START_SERVICE_USB:
 				System.out.println("starting usb service...");
-				mUSBSocketClient = new SockectClient();
 				mUSBSocketClient.setUpdateUICallback(updateUICallback);
-				if (mUSBSocketClient.adbCmd()) {
-					mUSBSocketClient.test();
-				}
+				mUSBSocketClient.start();
 				break;
 				
 			case ACTION_TYPE_STOP_SERVICE_USB:
 				System.out.println("stopping usb service...");
+				mUSBSocketClient.stop();
 				new Thread(){
 					public void run(){
 					try {
