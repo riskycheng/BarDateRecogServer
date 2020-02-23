@@ -62,6 +62,7 @@ public class BarCodeRecog extends JFrame {
 	JButton buttonStopBlueToothService = new JButton("Í£Ö¹À¶ÑÀ·þÎñ");
 
 	JLabel lblLogs = new JLabel("");
+	JLabel lblStatus = new JLabel("");
 
 	private JPanel contentPane;
 	
@@ -71,12 +72,13 @@ public class BarCodeRecog extends JFrame {
 
 		@Override
 		public void updateMsgFromClient(String clientIP, String message) {
+			lblStatus.setText("status:connected via WiFi");
 			// get the messages from client
 			SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			lblLogs.setText(df.format(new Date()) + " IP (" + clientIP + ") :" + message);
 			// call the robot to notify
 			try {
 				MyRobot.simulationInput(message);
+				lblLogs.setText("receive message : " + message);
 			} catch (AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -85,9 +87,11 @@ public class BarCodeRecog extends JFrame {
 
 		@Override
 		public void updateMesFromUSBClient(String message) {
+			lblStatus.setText("status:connected via USB");
 			// TODO Auto-generated method stub
 			try {
 				MyRobot.simulationInput(message);
+				lblLogs.setText("receive message : " + message);
 			} catch (AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -96,10 +100,12 @@ public class BarCodeRecog extends JFrame {
 
 		@Override
 		public void updateMessageFromBlueToothClient(String message) {
+			lblStatus.setText("status:connected via BlueTooth");
 			// TODO Auto-generated method stub
 			System.out.println("message from BlueTooth client >>>> " + message);
 			try {
 				MyRobot.simulationInput(message);
+				lblLogs.setText("receive message : " + message);
 			} catch (AWTException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -192,9 +198,6 @@ public class BarCodeRecog extends JFrame {
 		buttonStopService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopService);
 		
-		lblLogs.setBounds(6, 391, 378, 43);
-		contentPane.add(lblLogs);
-
 		// USB related
 		mUSBSocketClient = new SockectClient();
 		buttonStartUSBService.setBounds(26, 178, 140, 30);
@@ -219,6 +222,14 @@ public class BarCodeRecog extends JFrame {
 		buttonStopBlueToothService.setActionCommand(ACTION_TYPE_STOP_SERVICE_BLUETOOTH);
 		buttonStopBlueToothService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopBlueToothService);
+		
+		lblStatus.setBounds(26, 400, 300, 40);
+		lblStatus.setText("status:");
+		contentPane.add(lblStatus);
+		
+		lblLogs.setBounds(26, 440, 300, 40);
+		lblLogs.setText("logs:");
+		contentPane.add(lblLogs);
 
 		
 
