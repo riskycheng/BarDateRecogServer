@@ -64,19 +64,35 @@ public class BluetoothService implements Runnable {
     	System.out.println("try to accept and open");
     	
         try {
-			streamConnection = streamConnectionNotifier.acceptAndOpen();
-			inputStream = streamConnection.openInputStream();
-            outputStream = streamConnection.openOutputStream();
-            
+			
 			while (isListening) {
-				if ((inputStream.available()) <= 0) {
-					Thread.sleep(1000);
+				
+				if(streamConnection == null)
+					streamConnection = streamConnectionNotifier.acceptAndOpen();
+				if(streamConnection == null) {
+					System.out.println("init again");
+					init();
+					streamConnection = streamConnectionNotifier.acceptAndOpen();
 				}
+				if(inputStream == null && streamConnection != null)
+					inputStream = streamConnection.openInputStream();
+				if(outputStream == null && streamConnection != null)
+					outputStream = streamConnection.openOutputStream();
+				
 				System.out.println("message is comming");
                 try{
                 	outputStream.write("hello android BT".getBytes());
                 }catch(Exception e) {
-                	break;
+                	System.out.println("client is disconnected, try again here...");
+                	//break;
+                	Thread.sleep(1000);
+                	outputStream.close();
+                	inputStream.close();
+                	streamConnection.close();
+                	outputStream = null;
+                	inputStream = null;
+                	streamConnection = null;
+                	continue;
                 }
                 inputStream.read(buffer);
                 String message = new String(buffer);
