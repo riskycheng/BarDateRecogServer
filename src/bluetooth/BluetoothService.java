@@ -94,9 +94,14 @@ public class BluetoothService implements Runnable {
                 	streamConnection = null;
                 	continue;
                 }
+                
+              for(int s = 0; s < buffer.length; s++) {
+            	  buffer[s] = 0;
+              }
+                
                 inputStream.read(buffer);
                 String message = new String(buffer);
-                System.out.println("Receive message : " + message);
+                System.out.println("Receive message new: " + message);
                 
                 mUpdateUICallback.updateMessageFromBlueToothClient(message);
                 
