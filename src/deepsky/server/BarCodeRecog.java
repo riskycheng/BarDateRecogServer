@@ -135,7 +135,7 @@ public class BarCodeRecog extends JFrame {
 	 */
 	public BarCodeRecog() {
 		setResizable(false);
-		setTitle("智能条码日期识别应用 v1.0");
+		setTitle("\u667A\u80FD\u6761\u7801\u65E5\u671F\u8BC6\u522B\u5E94\u7528 v1.0_20200305");
 		setIconImage(
 				Toolkit.getDefaultToolkit().getImage(BarCodeRecog.class.getResource("/resources/barcode_logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
