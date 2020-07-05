@@ -13,6 +13,7 @@ import javax.swing.border.EmptyBorder;
 
 import bluetooth.BluetoothService;
 import usb.SockectClient;
+import usb.USBAccessityUtils;
 import utils.UpdateUICallback;
 
 import java.awt.Toolkit;
@@ -47,8 +48,10 @@ public class BarCodeRecog extends JFrame {
 
 	private SocketServer mServer = null;
 
+	//USB 通信相关
 	private SockectClient mUSBSocketClient = null;
-
+	private USBAccessityUtils mUsbAccessityUtils = null;
+	
 	JLabel lblQrcode = new JLabel();
 	JLabel label_IP = new JLabel("");
 	JButton buttonStartService = new JButton("启动WiFi服务");
@@ -209,6 +212,11 @@ public class BarCodeRecog extends JFrame {
 		buttonStopUSBService.setActionCommand(ACTION_TYPE_STOP_SERVICE_USB);
 		buttonStopUSBService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopUSBService);
+		
+		//USB try the read text solution
+		mUsbAccessityUtils = new USBAccessityUtils();
+		mUsbAccessityUtils.setUpdateUICallback(updateUICallback);
+		mUsbAccessityUtils.start();
 
 		/******** BlueTooth related ***********/
 		mBlueToothService = new BluetoothService();
