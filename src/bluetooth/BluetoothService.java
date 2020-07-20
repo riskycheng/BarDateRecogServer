@@ -33,7 +33,7 @@ public class BluetoothService implements Runnable {
         isListening = true;
     }
 
-    public void init() {
+    public boolean init() {
         try {
         	if (mLocalDevice == null) {
         		mLocalDevice = LocalDevice.getLocalDevice();
@@ -47,7 +47,9 @@ public class BluetoothService implements Runnable {
             serviceRecord.setAttributeValue(0x0008, new DataElement(DataElement.U_INT_1, 0xFF));
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
    
@@ -130,9 +132,11 @@ public class BluetoothService implements Runnable {
 		}
     }
     
-    public void start(){
-        init();
+    public boolean start(){
+        boolean blueToothSupported = init();
+        if(!blueToothSupported) return false;
         startListening();
+        return true;
     }
     
     public void stop(){

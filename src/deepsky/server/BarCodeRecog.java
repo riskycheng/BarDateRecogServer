@@ -48,14 +48,16 @@ public class BarCodeRecog extends JFrame {
 
 	private SocketServer mServer = null;
 
-	//USB 通信相关
+	// USB 通信相关
 	private SockectClient mUSBSocketClient = null;
 	private USBAccessityUtils mUsbAccessityUtils = null;
-	
+
 	JLabel lblQrcode = new JLabel();
 	JLabel label_IP = new JLabel("");
 	JButton buttonStartService = new JButton("启动WiFi服务");
 	JButton buttonStartUSBService = new JButton("启动USB服务");
+
+	JLabel currentConnection = new JLabel();
 
 	JButton buttonStopService = new JButton("停止WiFi服务");
 	JButton buttonStopUSBService = new JButton("停止USB服务");
@@ -68,8 +70,6 @@ public class BarCodeRecog extends JFrame {
 	JLabel lblStatus = new JLabel("");
 
 	private JPanel contentPane;
-	
-	
 
 	private UpdateUICallback updateUICallback = new UpdateUICallback() {
 
@@ -138,9 +138,9 @@ public class BarCodeRecog extends JFrame {
 	 */
 	public BarCodeRecog() {
 		setResizable(false);
-		setTitle("\u667A\u80FD\u6761\u7801\u65E5\u671F\u8BC6\u522B\u5E94\u7528 v1.0_20200305");
-		setIconImage(
-				Toolkit.getDefaultToolkit().getImage(BarCodeRecog.class.getResource("/resources/barcode_logo.png")));
+		setTitle("\u667A\u80FD\u6761\u7801\u65E5\u671F\u8BC6\u522B\u5E94\u7528 v1.0_20200720");
+		setIconImage(Toolkit.getDefaultToolkit().getImage(
+				BarCodeRecog.class.getResource("/resources/barcode_logo.png")));
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(0, 0, 400, 800);
 		contentPane = new JPanel();
@@ -151,14 +151,16 @@ public class BarCodeRecog extends JFrame {
 
 		BufferedImage image = null;
 		try {
-			image = ImageIO.read(BarCodeRecog.class.getResource("/resources/qrcode_expired.jpeg"));
+			image = ImageIO.read(BarCodeRecog.class
+					.getResource("/resources/qrcode_expired.jpeg"));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 
 		lblQrcode.setBounds(184, 80, 200, 200);
 
-		Image resizedImage = image.getScaledInstance(lblQrcode.getWidth(), lblQrcode.getHeight(), Image.SCALE_SMOOTH);
+		Image resizedImage = image.getScaledInstance(lblQrcode.getWidth(),
+				lblQrcode.getHeight(), Image.SCALE_SMOOTH);
 
 		ImageIcon imageIcon = new ImageIcon(resizedImage);
 		lblQrcode.setIcon(imageIcon);
@@ -191,16 +193,21 @@ public class BarCodeRecog extends JFrame {
 		button_refreshQRCode.setActionCommand(ACTION_TYPE_GENERATE_QRCODE);
 		contentPane.add(button_refreshQRCode);
 
+		currentConnection.setBounds(26, 40, 160, 30);
+		currentConnection.setText("当前连接： 无连接");
+		currentConnection.setForeground(Color.RED);
+		contentPane.add(currentConnection);
+
 		buttonStartService.setBounds(26, 79, 140, 30);
 		buttonStartService.setActionCommand(ACTION_TYPE_START_SERVICE_WIFI);
 		buttonStartService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStartService);
-		
+
 		buttonStopService.setBounds(26, 125, 140, 30);
 		buttonStopService.setActionCommand(ACTION_TYPE_STOP_SERVICE_WIFI);
 		buttonStopService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopService);
-		
+
 		// USB related
 		mUSBSocketClient = new SockectClient();
 		buttonStartUSBService.setBounds(26, 178, 140, 30);
@@ -212,34 +219,34 @@ public class BarCodeRecog extends JFrame {
 		buttonStopUSBService.setActionCommand(ACTION_TYPE_STOP_SERVICE_USB);
 		buttonStopUSBService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopUSBService);
-		
-		//USB try the read text solution
+
+		// USB try the read text solution
 		mUsbAccessityUtils = new USBAccessityUtils();
 		mUsbAccessityUtils.setUpdateUICallback(updateUICallback);
 		mUsbAccessityUtils.start();
 
 		/******** BlueTooth related ***********/
 		mBlueToothService = new BluetoothService();
-		
+
 		buttonStartBlueToothService.setBounds(26, 286, 140, 30);
-		buttonStartBlueToothService.setActionCommand(ACTION_TYPE_START_SERVICE_BLUETOOTH);
+		buttonStartBlueToothService
+				.setActionCommand(ACTION_TYPE_START_SERVICE_BLUETOOTH);
 		buttonStartBlueToothService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStartBlueToothService);
 
 		buttonStopBlueToothService.setBounds(26, 339, 140, 30);
-		buttonStopBlueToothService.setActionCommand(ACTION_TYPE_STOP_SERVICE_BLUETOOTH);
+		buttonStopBlueToothService
+				.setActionCommand(ACTION_TYPE_STOP_SERVICE_BLUETOOTH);
 		buttonStopBlueToothService.addActionListener(new MyActionListener());
 		contentPane.add(buttonStopBlueToothService);
-		
+
 		lblStatus.setBounds(26, 400, 300, 40);
 		lblStatus.setText("status:");
 		contentPane.add(lblStatus);
-		
+
 		lblLogs.setBounds(26, 440, 300, 40);
 		lblLogs.setText("logs:");
 		contentPane.add(lblLogs);
-
-		
 
 	}
 
@@ -258,7 +265,8 @@ public class BarCodeRecog extends JFrame {
 
 				try {
 					BufferedImage image = ImageIO.read(in);
-					Image resizedImage = image.getScaledInstance(lblQrcode.getWidth(), lblQrcode.getHeight(),
+					Image resizedImage = image.getScaledInstance(
+							lblQrcode.getWidth(), lblQrcode.getHeight(),
 							Image.SCALE_SMOOTH);
 					lblQrcode.setIcon(new ImageIcon(resizedImage));
 					// update the IP address
@@ -276,96 +284,90 @@ public class BarCodeRecog extends JFrame {
 					mServer = new SocketServer();
 					mServer.start();
 					mServer.setUpdateUICallback(updateUICallback);
+					currentConnection.setText("当前连接： WiFi");
+					currentConnection.setForeground(Color.GREEN);
 				} catch (IOException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 				break;
-				
-				
+
 			case ACTION_TYPE_STOP_SERVICE_WIFI:
 				System.out.println("stopping Wifi service...");
-				new Thread(){
-					public void run(){
-					try {
-					Thread.sleep(500);
-					JOptionPane.showConfirmDialog(
-	                        BarCodeRecog.this,
-	                        "停止WiFi服务并退出", "消息提示",
-	                        JOptionPane.CLOSED_OPTION
-	                );
-					System.exit(0);
-					} catch (InterruptedException e) { }
+				currentConnection.setText("当前连接： 无连接");
+				currentConnection.setForeground(Color.RED);
+				new Thread() {
+					public void run() {
+						try {
+							Thread.sleep(500);
+							JOptionPane.showConfirmDialog(BarCodeRecog.this,
+									"停止WiFi服务并退出", "消息提示",
+									JOptionPane.CLOSED_OPTION);
+							System.exit(0);
+						} catch (InterruptedException e) {
+						}
 					}
-					}.start();
+				}.start();
 				break;
-				
-				
-				
-				
-				
+
 			case ACTION_TYPE_START_SERVICE_USB:
 				System.out.println("starting usb service...");
 				mUSBSocketClient.setUpdateUICallback(updateUICallback);
-				int result = -1;
-				result = JOptionPane.showConfirmDialog(
-                        BarCodeRecog.this,
-                        "请先在手机客户端选择USB，并且打开扫码界面", "消息提示",
-                        JOptionPane.CLOSED_OPTION
-                );
-				if(result == 0)
-					mUSBSocketClient.start();
-				break;
-				
-			case ACTION_TYPE_STOP_SERVICE_USB:
-				System.out.println("stopping usb service...");
-				mUSBSocketClient.stop();
-				new Thread(){
-					public void run(){
-					try {
-					Thread.sleep(500);
-					JOptionPane.showConfirmDialog(
-	                        BarCodeRecog.this,
-	                        "停止USB服务并退出", "消息提示",
-	                        JOptionPane.CLOSED_OPTION
-	                );
-					System.exit(0);
-					} catch (InterruptedException e) { }
-					}
-					}.start();
+				currentConnection.setText("当前连接： USB");
+				currentConnection.setForeground(Color.GREEN);
 				break;
 
-				
-				
-				
-				
+			case ACTION_TYPE_STOP_SERVICE_USB:
+				System.out.println("stopping usb service...");
+				currentConnection.setText("当前连接： 无连接");
+				currentConnection.setForeground(Color.RED);
+				new Thread() {
+					public void run() {
+						try {
+							Thread.sleep(500);
+							JOptionPane.showConfirmDialog(BarCodeRecog.this,
+									"停止USB服务并退出", "消息提示",
+									JOptionPane.CLOSED_OPTION);
+							System.exit(0);
+						} catch (InterruptedException e) {
+						}
+					}
+				}.start();
+				break;
+
 			case ACTION_TYPE_START_SERVICE_BLUETOOTH:
 				System.out.println("starting blueTooth service...");
 				mBlueToothService.setUpdateUICallback(updateUICallback);
-				JOptionPane.showConfirmDialog(
-                        BarCodeRecog.this,
-                        "首先启动该服务端后再操作手机客户端", "消息提示",
-                        JOptionPane.CLOSED_OPTION
-                );
-				mBlueToothService.start();
+				JOptionPane.showConfirmDialog(BarCodeRecog.this,
+						"首先启动该服务端后再操作手机客户端", "消息提示", JOptionPane.CLOSED_OPTION);
+				boolean started = mBlueToothService.start();
+				if (started) {
+					currentConnection.setText("当前连接： 蓝牙");
+					currentConnection.setForeground(Color.GREEN);
+				} else {
+					currentConnection.setText("当前连接： 蓝牙不支持");
+					currentConnection.setForeground(Color.RED);
+				}
 				break;
-				
+
 			case ACTION_TYPE_STOP_SERVICE_BLUETOOTH:
 				System.out.println("stopping blueTooth service...");
+				currentConnection.setText("当前连接： 无连接");
+				currentConnection.setForeground(Color.RED);
 				mBlueToothService.stop();
-				new Thread(){
-					public void run(){
-					try {
-					Thread.sleep(500);
-					JOptionPane.showConfirmDialog(
-	                        BarCodeRecog.this,
-	                        "停止蓝牙服务并退出", "消息提示",
-	                        JOptionPane.CLOSED_OPTION
-	                );
-					System.exit(0);
-					} catch (InterruptedException e) { }
+				new Thread() {
+					public void run() {
+						try {
+							Thread.sleep(500);
+							JOptionPane.showConfirmDialog(BarCodeRecog.this,
+									"停止蓝牙服务并退出", "消息提示",
+									JOptionPane.CLOSED_OPTION);
+							currentConnection.setText("当前连接： 无连接");
+							System.exit(0);
+						} catch (InterruptedException e) {
+						}
 					}
-					}.start();
+				}.start();
 			default:
 				break;
 			}
